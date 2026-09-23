@@ -1,4 +1,4 @@
-﻿using log4net;
+﻿﻿using log4net;
 using log4net.Repository.Hierarchy;
 using System;
 using System.Collections.Generic;
@@ -22,8 +22,8 @@ namespace Verademo_dotnet.Controllers
                                       "Password=" + password;
 
             // Bad code         
-            string queryString = "UPDATE Sales.Store SET Demographics = " + demoXml
-                               + "WHERE CustomerID = " + customerID;
+            string queryString = "UPDATE Sales.Store SET Demographics = @demographics "
+                               + "WHERE CustomerID = @ID";
             // End of bad code
 
             // Good code
@@ -36,6 +36,8 @@ namespace Verademo_dotnet.Controllers
                 using (SqlCommand command = new SqlCommand(queryString, conn))
                 {
                     // Bad code
+                    command.Parameters.AddWithValue("@demographics", demoXml);
+                    command.Parameters.Add("@ID", SqlDbType.Int).Value = customerID;
                     command.ExecuteReader();
                     // End of bad code
 
